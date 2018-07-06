@@ -46,7 +46,7 @@ public class MailSender {
 	 * @param password
 	 *            发送人邮箱密码
 	 */
-	public MailSender(String stmpHost,String username, String password) {
+	public MailSender(String stmpHost, String username, String password) {
 		if (stmpHost == null) {
 			throw new IllegalArgumentException("stmpHost is null");
 		}
@@ -87,7 +87,7 @@ public class MailSender {
 		if (mail.getContent() == null || (mail.getAttachs() == null || mail.getAttachs().length == 0)) {
 			throw new IllegalArgumentException("content and attachs must not be both null");
 		}
-		if(mail.getFrom() == null || mail.getFrom().getAddress() == null) {
+		if (mail.getFrom() == null || mail.getFrom().getAddress() == null) {
 			throw new IllegalArgumentException("from is null");
 		}
 		try {

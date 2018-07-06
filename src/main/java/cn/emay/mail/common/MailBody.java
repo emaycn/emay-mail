@@ -87,7 +87,7 @@ public class MailBody {
 	 * @param content
 	 *            内容
 	 */
-	public MailBody(Linkman from,List<Linkman> to, List<Linkman> cc, List<Linkman> bcc, String subject, File[] attachs, String content) {
+	public MailBody(Linkman from, List<Linkman> to, List<Linkman> cc, List<Linkman> bcc, String subject, File[] attachs, String content) {
 		this.from = from;
 		this.to = to;
 		this.cc = cc;

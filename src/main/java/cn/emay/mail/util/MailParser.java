@@ -82,7 +82,7 @@ public class MailParser {
 		boolean isHasAttach = isContainAttach(message);
 		String messageId = mimsg.getMessageID();
 		String content = getMailContent(message);
-		MailBody mail = new MailBody(from,to, cc, bcc, subject, null, content);
+		MailBody mail = new MailBody(from, to, cc, bcc, subject, null, content);
 		mail.setSentTime(sentTime);
 		mail.setNeedReply(isNeedReply);
 		mail.setHasAttach(isHasAttach);

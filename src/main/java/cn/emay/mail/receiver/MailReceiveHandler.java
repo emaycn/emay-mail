@@ -19,6 +19,6 @@ public interface MailReceiveHandler {
 	 * 
 	 * @param folder
 	 */
-	public void handler(Folder folder) throws MessagingException,IOException;
+	public void handler(Folder folder) throws MessagingException, IOException;
 
 }
