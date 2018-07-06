@@ -43,7 +43,7 @@ public class ImapMailReceiver extends MailReceiver {
 	 * 链接
 	 */
 	private Session session;
-	
+
 	/**
 	 * 附件存储地址
 	 */
@@ -57,9 +57,11 @@ public class ImapMailReceiver extends MailReceiver {
 	 *            邮箱用户名
 	 * @param password
 	 *            邮箱密码
+	 * @param tmpFolderPath
+	 *            附件保存文件夹
 	 */
-	public ImapMailReceiver(String imapHost, String username, String password,String tmpFolderPath) {
-		this(imapHost, -1, username, password,tmpFolderPath);
+	public ImapMailReceiver(String imapHost, String username, String password, String tmpFolderPath) {
+		this(imapHost, -1, username, password, tmpFolderPath);
 	}
 
 	/**
@@ -72,8 +74,10 @@ public class ImapMailReceiver extends MailReceiver {
 	 *            邮箱用户名
 	 * @param password
 	 *            邮箱密码
+	 * @param tmpFolderPath
+	 *            附件保存文件夹
 	 */
-	public ImapMailReceiver(String imapHost, int imapPort, String username, String password,String tmpFolderPath) {
+	public ImapMailReceiver(String imapHost, int imapPort, String username, String password, String tmpFolderPath) {
 		if (imapHost == null) {
 			throw new IllegalArgumentException("imapHost is null");
 		}
@@ -86,7 +90,7 @@ public class ImapMailReceiver extends MailReceiver {
 			throw new IllegalArgumentException("password is null");
 		}
 		this.password = password;
-		if(tmpFolderPath == null) {
+		if (tmpFolderPath == null) {
 			throw new IllegalArgumentException("tmpFolderPath is null");
 		}
 		this.tmpFolderPath = tmpFolderPath;

@@ -43,7 +43,7 @@ public class Pop3MailReceiver extends MailReceiver {
 	 * 链接
 	 */
 	private Session session;
-	
+
 	/**
 	 * 附件存储地址
 	 */
@@ -57,9 +57,11 @@ public class Pop3MailReceiver extends MailReceiver {
 	 *            邮箱用户名
 	 * @param password
 	 *            邮箱密码
+	 * @param tmpFolderPath
+	 *            附件保存文件夹
 	 */
-	public Pop3MailReceiver(String pop3Host, String username, String password,String tmpFolderPath) {
-		this(pop3Host, -1, username, password,tmpFolderPath);
+	public Pop3MailReceiver(String pop3Host, String username, String password, String tmpFolderPath) {
+		this(pop3Host, -1, username, password, tmpFolderPath);
 	}
 
 	/**
@@ -72,8 +74,10 @@ public class Pop3MailReceiver extends MailReceiver {
 	 *            邮箱用户名
 	 * @param password
 	 *            邮箱密码
+	 * @param tmpFolderPath
+	 *            附件保存文件夹
 	 */
-	public Pop3MailReceiver(String pop3Host, int pop3Port, String username, String password,String tmpFolderPath) {
+	public Pop3MailReceiver(String pop3Host, int pop3Port, String username, String password, String tmpFolderPath) {
 		if (pop3Host == null) {
 			throw new IllegalArgumentException("pop3Host is null");
 		}
@@ -86,7 +90,7 @@ public class Pop3MailReceiver extends MailReceiver {
 			throw new IllegalArgumentException("password is null");
 		}
 		this.password = password;
-		if(tmpFolderPath == null) {
+		if (tmpFolderPath == null) {
 			throw new IllegalArgumentException("tmpFolderPath is null");
 		}
 		this.tmpFolderPath = tmpFolderPath;

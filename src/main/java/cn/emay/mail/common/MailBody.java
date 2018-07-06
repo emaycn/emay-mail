@@ -4,33 +4,70 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-public class Mail {
+/**
+ * 邮件实体
+ * 
+ * @author Frank
+ *
+ */
+public class MailBody {
 
+	/**
+	 * 邮件ID
+	 */
 	private String messageId;
 
+	/**
+	 * 发件人
+	 */
 	private Linkman from;
 
+	/**
+	 * 收件人
+	 */
 	private List<Linkman> to;
 
+	/**
+	 * 抄送人
+	 */
 	private List<Linkman> cc;
 
+	/**
+	 * 密送人
+	 */
 	private List<Linkman> bcc;
 
+	/**
+	 * 主题
+	 */
 	private String subject;
 
+	/**
+	 * 发送时间
+	 */
 	private Date sentTime;
 
+	/**
+	 * 是否需要回执
+	 */
 	private boolean isNeedReply;
 
-	private boolean isNew;
-
+	/**
+	 * 是否有附件
+	 */
 	private boolean isHasAttach;
 
+	/**
+	 * 内容
+	 */
 	private String content;
 
+	/**
+	 * 附件
+	 */
 	private File[] attachs;
 
-	public Mail() {
+	public MailBody() {
 
 	}
 
@@ -38,39 +75,20 @@ public class Mail {
 	 * 发送使用
 	 * 
 	 * @param to
-	 * @param subject
-	 * @param attachs
-	 */
-	public Mail(List<Linkman> to, String subject, File[] attachs) {
-		this.to = to;
-		this.subject = subject;
-		this.attachs = attachs;
-	}
-
-	/**
-	 * 发送使用
-	 * 
-	 * @param to
-	 * @param subject
-	 * @param content
-	 */
-	public Mail(List<Linkman> to, String subject, String content) {
-		this.to = to;
-		this.subject = subject;
-		this.content = content;
-	}
-
-	/**
-	 * 发送使用
-	 * 
-	 * @param to
+	 *            发件人
 	 * @param cc
+	 *            抄送人
 	 * @param bcc
+	 *            密送人
 	 * @param subject
+	 *            主题
 	 * @param attachs
+	 *            附件
 	 * @param content
+	 *            内容
 	 */
-	public Mail(List<Linkman> to, List<Linkman> cc, List<Linkman> bcc, String subject, File[] attachs, String content) {
+	public MailBody(Linkman from,List<Linkman> to, List<Linkman> cc, List<Linkman> bcc, String subject, File[] attachs, String content) {
+		this.from = from;
 		this.to = to;
 		this.cc = cc;
 		this.bcc = bcc;
@@ -157,14 +175,6 @@ public class Mail {
 
 	public void setNeedReply(boolean isNeedReply) {
 		this.isNeedReply = isNeedReply;
-	}
-
-	public boolean isNew() {
-		return isNew;
-	}
-
-	public void setNew(boolean isNew) {
-		this.isNew = isNew;
 	}
 
 	public boolean isHasAttach() {

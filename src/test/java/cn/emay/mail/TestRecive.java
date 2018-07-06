@@ -2,7 +2,8 @@ package cn.emay.mail;
 
 import java.util.List;
 
-import cn.emay.mail.common.Mail;
+import cn.emay.mail.common.MailBody;
+import cn.emay.mail.receiver.MailReceiveFilter;
 import cn.emay.mail.receiver.impl.Pop3MailReceiver;
 
 public class TestRecive {
@@ -17,10 +18,15 @@ public class TestRecive {
 		
 		Pop3MailReceiver re = new Pop3MailReceiver(pop3Host, username, password, "C:\\tmp");
 		
-		List<Mail> list= re.receiveInbox();
+		List<MailBody> list= re.receiveInbox(new MailReceiveFilter() {
+			@Override
+			public boolean filter(MailBody mail) {
+				return mail.getFrom().getAddress().contains("emay.cn");
+			}
+		});
 		
-		for(Mail mail : list) {
-			System.out.println(mail.getFrom().getAddress() + "\t" + mail.getFrom().getPersonal());
+		for(MailBody mail : list) {
+			System.out.println(mail.getSubject());
 		}
 		
 		

@@ -9,7 +9,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
 
-import cn.emay.mail.common.Mail;
+import cn.emay.mail.common.MailBody;
 import cn.emay.mail.util.MailParser;
 
 /**
@@ -21,8 +21,19 @@ import cn.emay.mail.util.MailParser;
  */
 public abstract class MailReceiver {
 
+	/**
+	 * 创建并连接store
+	 * 
+	 * @return
+	 * @throws MessagingException
+	 */
 	protected abstract Store createAndConnectStore() throws MessagingException;
 
+	/**
+	 * 获取附件保存文件夹
+	 * 
+	 * @return
+	 */
 	protected abstract String getAttachFolderPath();
 
 	/**
@@ -39,8 +50,8 @@ public abstract class MailReceiver {
 		try {
 			store = createAndConnectStore();
 			folder = store.getFolder(folderName);
-			folder.open(Folder.READ_WRITE);
 			if (folder != null) {
+				folder.open(Folder.READ_WRITE);
 				handler.handler(folder);
 			}
 		} catch (MessagingException e) {
@@ -65,30 +76,54 @@ public abstract class MailReceiver {
 		}
 	}
 
-	public List<Mail> receiveInbox() {
+	/**
+	 * 读取收件箱
+	 * 
+	 * @return
+	 */
+	public List<MailBody> receiveInbox() {
 		return receiveMails("inbox");
 	}
 
-	public List<Mail> receiveInbox(int start, int end) {
-		return receiveMails("inbox", start, end);
+	/**
+	 * 读取收件箱
+	 * 
+	 * @param filter
+	 *            拦截器
+	 * @return
+	 */
+	public List<MailBody> receiveInbox(MailReceiveFilter filter) {
+		return receiveMails("inbox", filter);
 	}
 
-	public List<Mail> receiveMails(String folderName) {
-		return receiveMails(folderName, -1, -1);
+	/**
+	 * 读取邮件文件夹
+	 * 
+	 * @param folderName
+	 *            文件夹
+	 * @return
+	 */
+	public List<MailBody> receiveMails(String folderName) {
+		return receiveMails(folderName, null);
 	}
 
-	public List<Mail> receiveMails(String folderName, int start, int end) {
-		List<Mail> mails = new ArrayList<Mail>();
+	/**
+	 * 读取邮件
+	 * 
+	 * @param folderName
+	 *            文件夹
+	 * @param filter
+	 *            拦截器
+	 * @return
+	 */
+	public List<MailBody> receiveMails(String folderName, MailReceiveFilter filter) {
+		List<MailBody> mails = new ArrayList<MailBody>();
 		handleMail(folderName, new MailReceiveHandler() {
 			@Override
 			public void handler(Folder folder) throws MessagingException, IOException {
-				int total = folder.getMessageCount();
-				Message[] messages = null;
-				int startnew = start <= 0 ? 1 : start;
-				int endnew = end <= 0 ? total : end;
-				messages = folder.getMessages(startnew, endnew);
+				Message[] messages = folder.getMessages();
 				for (Message message : messages) {
-					Mail mail = MailParser.getInstanec().parse(message,getAttachFolderPath());
+					MailBody mail = MailParser.getInstance().parse(message, filter, getAttachFolderPath());
 					if (mail != null) {
 						mails.add(mail);
 					}

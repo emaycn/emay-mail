@@ -19,7 +19,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import cn.emay.mail.common.Linkman;
-import cn.emay.mail.common.Mail;
+import cn.emay.mail.common.MailBody;
 
 /**
  * 基于SMTP协议的邮件发送器 <br/>
@@ -29,11 +29,6 @@ import cn.emay.mail.common.Mail;
  *
  */
 public class MailSender {
-
-	/**
-	 * 发送人邮箱
-	 */
-	private String senderAddress;
 
 	/**
 	 * 链接
@@ -51,12 +46,9 @@ public class MailSender {
 	 * @param password
 	 *            发送人邮箱密码
 	 */
-	public MailSender(String stmpHost, String senderAddress, String username, String password) {
+	public MailSender(String stmpHost,String username, String password) {
 		if (stmpHost == null) {
 			throw new IllegalArgumentException("stmpHost is null");
-		}
-		if (senderAddress == null) {
-			throw new IllegalArgumentException("senderAddress is null");
 		}
 		if (username == null) {
 			throw new IllegalArgumentException("username is null");
@@ -64,7 +56,6 @@ public class MailSender {
 		if (password == null) {
 			throw new IllegalArgumentException("password is null");
 		}
-		this.senderAddress = senderAddress;
 		Properties props = new Properties();
 		props.setProperty("mail.smtp.auth", "true");
 		props.setProperty("mail.transport.protocol", "smtp");
@@ -77,7 +68,13 @@ public class MailSender {
 		});
 	}
 
-	public void send(Mail mail) {
+	/**
+	 * 发送邮件
+	 * 
+	 * @param mail
+	 *            邮件
+	 */
+	public void send(MailBody mail) {
 		if (mail == null) {
 			return;
 		}
@@ -90,9 +87,12 @@ public class MailSender {
 		if (mail.getContent() == null || (mail.getAttachs() == null || mail.getAttachs().length == 0)) {
 			throw new IllegalArgumentException("content and attachs must not be both null");
 		}
+		if(mail.getFrom() == null || mail.getFrom().getAddress() == null) {
+			throw new IllegalArgumentException("from is null");
+		}
 		try {
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(senderAddress));
+			message.setFrom(new InternetAddress(mail.getFrom().getAddress()));
 			{
 				Address[] addresses = new Address[mail.getTo().size()];
 				for (int i = 0; i < mail.getTo().size(); i++) {

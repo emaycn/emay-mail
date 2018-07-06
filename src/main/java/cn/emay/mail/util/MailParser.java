@@ -24,21 +24,50 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 import cn.emay.mail.common.Linkman;
-import cn.emay.mail.common.Mail;
+import cn.emay.mail.common.MailBody;
+import cn.emay.mail.receiver.MailReceiveFilter;
 
+/**
+ * 邮件解析器
+ * 
+ * @author Frank
+ *
+ */
 public class MailParser {
 
+	/**
+	 * 单例
+	 */
 	private static MailParser parser = new MailParser();
 
+	/**
+	 * 单例
+	 */
 	private MailParser() {
 
 	}
 
-	public static MailParser getInstanec() {
+	/**
+	 * 单例
+	 */
+	public static MailParser getInstance() {
 		return parser;
 	}
 
-	public Mail parse(Message message, String attachFolderPath) throws MessagingException, IOException {
+	/**
+	 * 解析
+	 * 
+	 * @param message
+	 *            邮件
+	 * @param attachFolderPath
+	 *            附件保存地址
+	 * @param filter
+	 *            拦截器
+	 * @return
+	 * @throws MessagingException
+	 * @throws IOException
+	 */
+	public MailBody parse(Message message, MailReceiveFilter filter, String attachFolderPath) throws MessagingException, IOException {
 		if (message == null) {
 			return null;
 		}
@@ -50,14 +79,21 @@ public class MailParser {
 		String subject = getSubject(mimsg);
 		Date sentTime = getSentDate(mimsg);
 		boolean isNeedReply = getReplySign(mimsg);
-		boolean isNew = isNew(message);
 		boolean isHasAttach = isContainAttach(message);
 		String messageId = mimsg.getMessageID();
-		messageId = messageId == null ? UUID.randomUUID().toString().replace("-", "") : messageId.replace("<", "").replace(">", "").replace("@", "").replace(".", "").replace("$", "");
 		String content = getMailContent(message);
+		MailBody mail = new MailBody(from,to, cc, bcc, subject, null, content);
+		mail.setSentTime(sentTime);
+		mail.setNeedReply(isNeedReply);
+		mail.setHasAttach(isHasAttach);
+		mail.setMessageId(messageId);
+		if (filter != null && !filter.filter(mail)) {
+			return null;
+		}
 		File folder = null;
 		if (isHasAttach) {
-			String folderPath = attachFolderPath + File.separator + new SimpleDateFormat("yyyyMMdd").format(new Date()) + File.separator + messageId;
+			String messageIdnew = messageId == null ? UUID.randomUUID().toString().replace("-", "") : messageId.replace("<", "").replace(">", "").replace("@", "").replace(".", "").replace("$", "");
+			String folderPath = attachFolderPath + File.separator + new SimpleDateFormat("yyyyMMdd").format(new Date()) + File.separator + messageIdnew;
 			folder = new File(folderPath);
 			if (!folder.exists()) {
 				folder.mkdirs();
@@ -65,13 +101,7 @@ public class MailParser {
 			saveAttachMent(folderPath, message);
 		}
 		File[] files = isHasAttach ? folder.listFiles() : null;
-		Mail mail = new Mail( to, cc, bcc, subject, files, content);
-		mail.setSentTime(sentTime);
-		mail.setNeedReply(isNeedReply);
-		mail.setNew(isNew);
-		mail.setHasAttach(isHasAttach);
-		mail.setFrom(from);
-		mail.setMessageId(messageId);
+		mail.setAttachs(files);
 		return mail;
 	}
 
@@ -175,11 +205,11 @@ public class MailParser {
 	}
 
 	/**
-	 * 是否已读
+	 * 是否已读[不可用]
 	 * 
 	 * @throws MessagingException
 	 */
-	private boolean isNew(Message message) throws MessagingException {
+	protected boolean isNew(Message message) throws MessagingException {
 		Flags flags = message.getFlags();
 		if (flags == null) {
 			return false;
@@ -278,15 +308,19 @@ public class MailParser {
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		} finally {
-			try {
-				bos.close();
-			} catch (IOException e) {
-				throw new IllegalArgumentException(e);
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					throw new IllegalArgumentException(e);
+				}
 			}
-			try {
-				bis.close();
-			} catch (IOException e) {
-				throw new IllegalArgumentException(e);
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					throw new IllegalArgumentException(e);
+				}
 			}
 		}
 	}
