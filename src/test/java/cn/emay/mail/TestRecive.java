@@ -13,6 +13,7 @@ import cn.emay.mail.receiver.impl.Pop3MailReceiver;
  */
 public class TestRecive {
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		String pop3Host = "mail.emay.cn";
@@ -28,8 +29,8 @@ public class TestRecive {
 			}
 		});
 
-		for (MailBody mail : list) {
-			System.out.println(mail.getSubject());
+		for ( MailBody mail : list) {
+			//  mail todo
 		}
 
 	}

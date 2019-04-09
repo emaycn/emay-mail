@@ -23,11 +23,12 @@ public class MailSenderTest {
 
 		MailSender ms = new MailSender(stmpHost, username, password);
 
-		String subject = "百度来信";
-		String content = "你好！<a href=\"http://www.baidu.com\">点击</a>";
+		String subject = "你好";
+		String content = "你好！<a href=\"http://www.emay.cn\">点击</a>";
 		List<Linkman> to = new ArrayList<>();
 		to.add(new Linkman("xxxxxx@yeah.net"));
-		File[] attachs = { new File("C:\\Users\\Frank\\Desktop\\sms-php5.php") };
+		File[] attachs = null;
+//		attachs = { new File("C:\\Users\\Frank\\Desktop\\sms-php5.php") };
 		Linkman from = new Linkman("xxxx@emay.cn");
 
 		MailBody mail = new MailBody(from, to, null, null, subject, attachs, content);
