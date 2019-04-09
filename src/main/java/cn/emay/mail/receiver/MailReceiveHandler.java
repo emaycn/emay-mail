@@ -18,6 +18,10 @@ public interface MailReceiveHandler {
 	 * 不要自行关闭
 	 * 
 	 * @param folder
+	 *            邮件文件夹
+	 * 
+	 * @throws MessagingException
+	 * @throws IOException
 	 */
 	public void handler(Folder folder) throws MessagingException, IOException;
 

@@ -119,7 +119,8 @@ public class MailParser {
 			for (int i = 0; i < counts; i++) {
 				BodyPart mpart = mp.getBodyPart(i);
 				String disposition = mpart.getDisposition();
-				if ((disposition != null) && ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE)))) {
+				boolean isAttach = (disposition != null) && ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE)));
+				if (isAttach) {
 					fileName = mpart.getFileName();
 					fileName = MimeUtility.decodeText(fileName);
 					saveFile(folderPath, fileName, mpart.getInputStream());
@@ -152,16 +153,19 @@ public class MailParser {
 			for (int i = 0; i < counts; i++) {
 				BodyPart mpart = mp.getBodyPart(i);
 				String disposition = mpart.getDisposition();
-				if ((disposition != null) && ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE))))
+				boolean hasAttach = (disposition != null) && ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE)));
+				if (hasAttach) {
 					attachflag = true;
-				else if (mpart.isMimeType("multipart/*")) {
+				}else if (mpart.isMimeType("multipart/*")) {
 					attachflag = isContainAttach((Part) mpart);
 				} else {
 					String contype = mpart.getContentType();
-					if (contype.toLowerCase().indexOf("application") != -1)
+					if (contype.toLowerCase().indexOf("application") != -1) {
 						attachflag = true;
-					if (contype.toLowerCase().indexOf("name") != -1)
+					}
+					if (contype.toLowerCase().indexOf("name") != -1) {
 						attachflag = true;
+					}
 				}
 			}
 		} else if (part.isMimeType("message/rfc822")) {

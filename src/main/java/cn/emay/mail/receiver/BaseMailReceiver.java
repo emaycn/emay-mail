@@ -19,7 +19,7 @@ import cn.emay.mail.util.MailParser;
  * @author Frank
  *
  */
-public abstract class MailReceiver {
+public abstract class BaseMailReceiver {
 
 	/**
 	 * 创建并连接store

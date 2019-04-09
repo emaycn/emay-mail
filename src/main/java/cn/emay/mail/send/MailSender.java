@@ -84,7 +84,8 @@ public class MailSender {
 		if (mail.getSubject() == null) {
 			throw new IllegalArgumentException("subject is null");
 		}
-		if (mail.getContent() == null || (mail.getAttachs() == null || mail.getAttachs().length == 0)) {
+		boolean hsNotContent = mail.getContent() == null || (mail.getAttachs() == null || mail.getAttachs().length == 0);
+		if (hsNotContent) {
 			throw new IllegalArgumentException("content and attachs must not be both null");
 		}
 		if (mail.getFrom() == null || mail.getFrom().getAddress() == null) {

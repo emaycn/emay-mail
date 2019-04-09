@@ -6,6 +6,11 @@ import cn.emay.mail.common.MailBody;
 import cn.emay.mail.receiver.MailReceiveFilter;
 import cn.emay.mail.receiver.impl.Pop3MailReceiver;
 
+/**
+ * 
+ * @author Frank
+ *
+ */
 public class TestRecive {
 
 	public static void main(String[] args) {

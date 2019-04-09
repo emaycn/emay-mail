@@ -8,7 +8,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 
-import cn.emay.mail.receiver.MailReceiver;
+import cn.emay.mail.receiver.BaseMailReceiver;
 
 /**
  * 基于Imap的邮件接收器<br/>
@@ -17,7 +17,7 @@ import cn.emay.mail.receiver.MailReceiver;
  * @author Frank
  *
  */
-public class ImapMailReceiver extends MailReceiver {
+public class ImapMailReceiver extends BaseMailReceiver {
 
 	/**
 	 * imap服务器地址

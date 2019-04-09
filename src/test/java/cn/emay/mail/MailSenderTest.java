@@ -8,7 +8,12 @@ import cn.emay.mail.common.Linkman;
 import cn.emay.mail.common.MailBody;
 import cn.emay.mail.send.MailSender;
 
-public class TestMailSender {
+/**
+ * 
+ * @author Frank
+ *
+ */
+public class MailSenderTest {
 
 	public static void main(String[] args) {
 
