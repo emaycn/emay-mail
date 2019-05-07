@@ -1,4 +1,4 @@
-# 亿美JAVA组件：Mail组件
+# Mail组件
 
 ## API
 
