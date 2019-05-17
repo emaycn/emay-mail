@@ -156,7 +156,7 @@ public class MailParser {
 				boolean hasAttach = (disposition != null) && ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE)));
 				if (hasAttach) {
 					attachflag = true;
-				}else if (mpart.isMimeType("multipart/*")) {
+				} else if (mpart.isMimeType("multipart/*")) {
 					attachflag = isContainAttach((Part) mpart);
 				} else {
 					String contype = mpart.getContentType();

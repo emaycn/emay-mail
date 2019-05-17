@@ -16,7 +16,8 @@ public interface MailReceiveFilter {
 	 * 参与判断的参数：to, cc, bcc, subject,
 	 * content,sentTime,isNeedReply,isHasAttach,from,messageId
 	 * 
-	 * @param mail 邮件实体
+	 * @param mail
+	 *            邮件实体
 	 * 
 	 * @return true:保留，false:丢弃
 	 */

@@ -28,7 +28,7 @@ public class MailSenderTest {
 		List<Linkman> to = new ArrayList<>();
 		to.add(new Linkman("xxxxxx@yeah.net"));
 		File[] attachs = null;
-//		attachs = { new File("C:\\Users\\Frank\\Desktop\\sms-php5.php") };
+		// attachs = { new File("C:\\Users\\Frank\\Desktop\\sms-php5.php") };
 		Linkman from = new Linkman("xxxx@emay.cn");
 
 		MailBody mail = new MailBody(from, to, null, null, subject, attachs, content);

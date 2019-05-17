@@ -29,8 +29,8 @@ public class TestRecive {
 			}
 		});
 
-		for ( MailBody mail : list) {
-			//  mail todo
+		for (MailBody mail : list) {
+			// mail todo
 		}
 
 	}
