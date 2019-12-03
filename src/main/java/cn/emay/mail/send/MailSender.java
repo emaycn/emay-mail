@@ -35,18 +35,24 @@ public class MailSender {
 	 */
 	private Session session;
 
+	private static String defaultSslPort="465";
+
 	/**
 	 * 
 	 * @param stmpHost
 	 *            stmp服务器地址
-	 * @param senderAddress
-	 *            发送人邮箱
 	 * @param username
 	 *            发送人邮箱用户名
 	 * @param password
 	 *            发送人邮箱密码
 	 */
 	public MailSender(String stmpHost, String username, String password) {
+		this(null,stmpHost,null,username,password);
+	}
+	public MailSender(String sslFactoryClassName, String stmpHost, String username, String password) {
+		this(sslFactoryClassName,stmpHost,defaultSslPort,username,password);
+	}
+	public MailSender(String sslFactoryClassName, String stmpHost,String port, String username, String password) {
 		if (stmpHost == null) {
 			throw new IllegalArgumentException("stmpHost is null");
 		}
@@ -57,9 +63,17 @@ public class MailSender {
 			throw new IllegalArgumentException("password is null");
 		}
 		Properties props = new Properties();
-		props.setProperty("mail.smtp.auth", "true");
-		props.setProperty("mail.transport.protocol", "smtp");
 		props.setProperty("mail.smtp.host", stmpHost);
+		props.setProperty("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.auth", "true");
+		if(null!=sslFactoryClassName && !"".equals(sslFactoryClassName)){
+			props.setProperty("mail.smtp.socketFactory.class", sslFactoryClassName);
+			props.setProperty("mail.smtp.socketFactory.fallback", "false");
+			if(null!=port){
+				props.setProperty("mail.smtp.port", port);
+				props.setProperty("mail.smtp.socketFactory.port", port);
+			}
+		}
 		this.session = Session.getInstance(props, new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
