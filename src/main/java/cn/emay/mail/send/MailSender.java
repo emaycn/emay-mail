@@ -24,7 +24,7 @@ import cn.emay.mail.common.MailBody;
 /**
  * 基于SMTP协议的邮件发送器 <br/>
  * 需要发送者邮箱先授权开启SMTP协议允许
- * 
+ *
  * @author Frank
  *
  */
@@ -35,24 +35,39 @@ public class MailSender {
 	 */
 	private Session session;
 
-	private static String defaultSslPort="465";
-
 	/**
-	 * 
-	 * @param stmpHost
-	 *            stmp服务器地址
-	 * @param username
-	 *            发送人邮箱用户名
-	 * @param password
-	 *            发送人邮箱密码
+	 * 非加密连接客户端，使用默认25端口
+	 *
+	 * @param stmpHost stmp服务器地址
+	 * @param username 发送人邮箱用户名
+	 * @param password 发送人邮箱密码
 	 */
 	public MailSender(String stmpHost, String username, String password) {
-		this(null,stmpHost,null,username,password);
+		this(false, stmpHost, null, username, password);
 	}
-	public MailSender(String sslFactoryClassName, String stmpHost, String username, String password) {
-		this(sslFactoryClassName,stmpHost,defaultSslPort,username,password);
+
+	/**
+	 * 客户端，使用默认25/465端口
+	 *
+	 * @param isSsl    是否ssl链接
+	 * @param stmpHost stmp服务器地址
+	 * @param username 发送人邮箱用户名
+	 * @param password 发送人邮箱密码
+	 */
+	public MailSender(boolean isSsl, String stmpHost, String username, String password) {
+		this(isSsl, stmpHost, null, username, password);
 	}
-	public MailSender(String sslFactoryClassName, String stmpHost,String port, String username, String password) {
+
+	/**
+	 * 客户端
+	 *
+	 * @param isSsl    是否ssl链接
+	 * @param stmpHost stmp服务器地址
+	 * @param port     stmp服务器端口[默认端口25请填空，ssl端口默认为465]
+	 * @param username 发送人邮箱用户名
+	 * @param password 发送人邮箱密码
+	 */
+	public MailSender(boolean isSsl, String stmpHost, String port, String username, String password) {
 		if (stmpHost == null) {
 			throw new IllegalArgumentException("stmpHost is null");
 		}
@@ -62,17 +77,22 @@ public class MailSender {
 		if (password == null) {
 			throw new IllegalArgumentException("password is null");
 		}
+		if (port == null) {
+			if (isSsl) {
+				port = "465";
+			} else {
+				port = "25";
+			}
+		}
 		Properties props = new Properties();
 		props.setProperty("mail.smtp.host", stmpHost);
 		props.setProperty("mail.transport.protocol", "smtp");
 		props.put("mail.smtp.auth", "true");
-		if(null!=sslFactoryClassName && !"".equals(sslFactoryClassName)){
-			props.setProperty("mail.smtp.socketFactory.class", sslFactoryClassName);
+		props.setProperty("mail.smtp.port", port);
+		if (isSsl) {
+			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.setProperty("mail.smtp.socketFactory.fallback", "false");
-			if(null!=port){
-				props.setProperty("mail.smtp.port", port);
-				props.setProperty("mail.smtp.socketFactory.port", port);
-			}
+			props.setProperty("mail.smtp.socketFactory.port", port);
 		}
 		this.session = Session.getInstance(props, new Authenticator() {
 			@Override
@@ -84,9 +104,8 @@ public class MailSender {
 
 	/**
 	 * 发送邮件
-	 * 
-	 * @param mail
-	 *            邮件
+	 *
+	 * @param mail 邮件
 	 */
 	public void send(MailBody mail) {
 		if (mail == null) {

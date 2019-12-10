@@ -17,19 +17,21 @@ public class MailSenderTest {
 
 	public static void main(String[] args) {
 
-		String stmpHost = "mail.emay.cn";
-		String username = "xxxxxx";
-		String password = "xxxxxx";
+		String stmpHost = "smtp.qq.com";
+		String username = "xxx@qq.com";
+		/*使用SSL需要QQ开启 IMAP与SMTP服务 密码为开启SMTP服务时的授权码*/
+		String password = "xxx";
 
-		MailSender ms = new MailSender(stmpHost, username, password);
+		//MailSender ms = new MailSender(stmpHost, username, password);
+		MailSender ms = new MailSender(true,stmpHost, username, password);
 
 		String subject = "你好";
-		String content = "你好！<a href=\"http://www.emay.cn\">点击</a>";
+		String content = "邮件内容";
 		List<Linkman> to = new ArrayList<>();
-		to.add(new Linkman("xxxxxx@yeah.net"));
+		to.add(new Linkman("xxx@emay.cn"));
 		File[] attachs = null;
 		// attachs = { new File("C:\\Users\\Frank\\Desktop\\sms-php5.php") };
-		Linkman from = new Linkman("xxxx@emay.cn");
+		Linkman from = new Linkman("xxx@qq.com");
 
 		MailBody mail = new MailBody(from, to, null, null, subject, attachs, content);
 
