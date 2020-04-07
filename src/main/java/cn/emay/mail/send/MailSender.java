@@ -36,38 +36,84 @@ public class MailSender {
 	private Session session;
 
 	/**
-	 * 非加密连接客户端，使用默认25端口
-	 *
-	 * @param stmpHost stmp服务器地址
-	 * @param username 发送人邮箱用户名
-	 * @param password 发送人邮箱密码
+	 * ssl 邮件发送器
+	 * 
+	 * @param stmpHost            stmp服务器地址
+	 * @param port                stmp服务器端口[ssl端口默认为465]
+	 * @param username            发送人邮箱用户名
+	 * @param password            发送人邮箱密码
+	 * @param checkserveridentity ssl是否检测证书
+	 * @return
 	 */
-	public MailSender(String stmpHost, String username, String password) {
-		this(false, stmpHost, null, username, password);
+	public static MailSender sslMailSender(String stmpHost, String port, String username, String password, boolean checkserveridentity) {
+		return new MailSender(true, stmpHost, port, username, password, checkserveridentity);
 	}
 
 	/**
-	 * 客户端，使用默认25/465端口
-	 *
-	 * @param isSsl    是否ssl链接
+	 * ssl 邮件发送器<br/>
+	 * 使用默认的465 ssl端口
+	 * 
+	 * @param stmpHost            stmp服务器地址
+	 * @param username            发送人邮箱用户名
+	 * @param password            发送人邮箱密码
+	 * @param checkserveridentity ssl是否检测证书
+	 * @return
+	 */
+	public static MailSender sslMailSender(String stmpHost, String username, String password, boolean checkserveridentity) {
+		return new MailSender(true, stmpHost, null, username, password, checkserveridentity);
+	}
+
+	/**
+	 * ssl 邮件发送器<br/>
+	 * 使用默认的465 ssl端口<br/>
+	 * 检测证书
+	 * 
 	 * @param stmpHost stmp服务器地址
 	 * @param username 发送人邮箱用户名
 	 * @param password 发送人邮箱密码
+	 * @return
 	 */
-	public MailSender(boolean isSsl, String stmpHost, String username, String password) {
-		this(isSsl, stmpHost, null, username, password);
+	public static MailSender sslMailSender(String stmpHost, String username, String password) {
+		return new MailSender(true, stmpHost, null, username, password, true);
+	}
+
+	/**
+	 * 普通 邮件发送器
+	 * 
+	 * @param stmpHost stmp服务器地址
+	 * @param port     stmp服务器端口[默认端口25]
+	 * @param username 发送人邮箱用户名
+	 * @param password 发送人邮箱密码
+	 * @return
+	 */
+	public static MailSender normalSender(String stmpHost, String port, String username, String password) {
+		return new MailSender(false, stmpHost, port, username, password, false);
+	}
+
+	/**
+	 * 普通 邮件发送器<br/>
+	 * 使用默认的25端口<br/>
+	 * 
+	 * @param stmpHost stmp服务器地址
+	 * @param username 发送人邮箱用户名
+	 * @param password 发送人邮箱密码
+	 * @return
+	 */
+	public static MailSender normalSender(String stmpHost, String username, String password) {
+		return new MailSender(false, stmpHost, null, username, password, false);
 	}
 
 	/**
 	 * 客户端
 	 *
-	 * @param isSsl    是否ssl链接
-	 * @param stmpHost stmp服务器地址
-	 * @param port     stmp服务器端口[默认端口25请填空，ssl端口默认为465]
-	 * @param username 发送人邮箱用户名
-	 * @param password 发送人邮箱密码
+	 * @param isSsl               是否ssl链接
+	 * @param stmpHost            stmp服务器地址
+	 * @param port                stmp服务器端口[默认端口25请填空，ssl端口默认为465]
+	 * @param username            发送人邮箱用户名
+	 * @param password            发送人邮箱密码
+	 * @param checkserveridentity ssl是否检测证书
 	 */
-	public MailSender(boolean isSsl, String stmpHost, String port, String username, String password) {
+	public MailSender(boolean isSsl, String stmpHost, String port, String username, String password, boolean checkserveridentity) {
 		if (stmpHost == null) {
 			throw new IllegalArgumentException("stmpHost is null");
 		}
@@ -93,6 +139,10 @@ public class MailSender {
 			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.setProperty("mail.smtp.socketFactory.fallback", "false");
 			props.setProperty("mail.smtp.socketFactory.port", port);
+			if (!checkserveridentity) {
+				props.setProperty("mail.smtp.ssl.checkserveridentity", String.valueOf(checkserveridentity));
+				props.setProperty("mail.smtp.ssl.trust", stmpHost);
+			}
 		}
 		this.session = Session.getInstance(props, new Authenticator() {
 			@Override

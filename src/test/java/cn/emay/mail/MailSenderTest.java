@@ -22,8 +22,7 @@ public class MailSenderTest {
 		/*使用SSL需要QQ开启 IMAP与SMTP服务 密码为开启SMTP服务时的授权码*/
 		String password = "xxx";
 
-		//MailSender ms = new MailSender(stmpHost, username, password);
-		MailSender ms = new MailSender(true,stmpHost, username, password);
+		MailSender ms = MailSender.sslMailSender(stmpHost, username, password);
 
 		String subject = "你好";
 		String content = "邮件内容";
